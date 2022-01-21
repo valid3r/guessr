@@ -9,12 +9,13 @@ export default function Home() {
   const [randomNumber, setRandomNumber] = useState("?");
   const [userNumber, setUserNumber] = useState("");
   const [timesTried, setTimesTried] = useState(0);
-  const [userMessage, setUserMessage] = useState("gUeSS Da nUmBer!");
+
   const lockedNumberRef = useRef();
   const userMessageRef = useRef();
 
   const [pcMessage, setPCMessage] = useState();
   const userMessages = {
+    default: "gUeSS Da nUmBer!",
     correct: "Correct !",
     tooHigh: "tOo hIgH !",
     tooLow: "tOo looW !",
@@ -22,7 +23,9 @@ export default function Home() {
     pcCorrect: "You were too lazy! PC Found the number instead!!",
   };
 
+  const [userMessage, setUserMessage] = useState(userMessages.default);
   const initTrials = [];
+  const [trialsStarter, setTrialsStarter] = useState(1);
   const [trials, setTrials] = useState([]);
 
   const generateRandomNumber = () => {
@@ -62,12 +65,17 @@ export default function Home() {
     setUserNumber("");
     setTrials([]);
     setPCMessage([]);
+    setUserMessage(userMessages.default);
+    userMessageRef.current.style.color = "black";
   };
 
   const compareNumbers = () => {
     // console.log("userNumber: ", userNumber);
     console.log("hiddenNumber: ", hiddenNumber);
 
+    // setTrials(counter);
+
+    console.log("Times triedd: ", trialsStarter);
     if (userNumber == "" || userNumber == undefined) {
       // Notify
       console.log("Please Enter a number!");
@@ -85,10 +93,7 @@ export default function Home() {
       setUserMessage(userMessages.tooLow);
       // Notify User
     } else if (userNumber == hiddenNumber) {
-      console.log("Random == userNumber");
       // Notify User
-      // Set randomNumber to hiddenNumber
-      console.log("Congrats!!!");
 
       setRandomNumber(hiddenNumber);
 
@@ -97,6 +102,8 @@ export default function Home() {
       userMessageRef.current.style.color = "green";
       // lockedNumberRef.current.style.color = "white";
     }
+
+    // setTrials(initTrials);
   };
 
   useEffect(() => {
@@ -104,20 +111,8 @@ export default function Home() {
   }, []);
 
   const handleUserGuess = () => {
-    // Set to hidden
-    // Log Times Tried
-    console.log("Times Tried", timesTried);
     setTimesTried(timesTried + 1);
-
-    // Set randomNumber
-    // generateRandomNumber();
-
-    // Set userNumber
-    // console.log("hidden Number", hiddenNumber);
-
-    // Compare
     compareNumbers();
-    // console.log("User Number", userNumber);
   };
 
   return (
@@ -133,9 +128,11 @@ export default function Home() {
           <h1 className={custom.history}>Guess History</h1>
 
           <div className={custom.content}>
-            {trials.map((p, index) => {
-              return <p key={index}>{p}</p>;
-            })}
+            <div>
+              {trials.map((p, index) => {
+                return <p key={index}>{p}</p>;
+              })}
+            </div>
           </div>
         </div>
 
@@ -206,7 +203,7 @@ export default function Home() {
         </div>
 
         <div className={custom.column_right}>
-          <h1 className={custom.options}>Settings</h1>
+          <h1 className={custom.options}>Options</h1>
           <div className={custom.button}>
             <button href="#" onClick={startPCGame}>
               <h1 className="text-center">
